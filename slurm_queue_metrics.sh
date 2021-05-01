@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## High Level Slurm Metrics
+## Slurm Per Queue Metrics
 ## Can run on any host that can query the scheduler
 ## Put telegraf in admin group so it can see all queues; or add telegraf to sudoers and modify script to execute slurm commands with sudo
 
