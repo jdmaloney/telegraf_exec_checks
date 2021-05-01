@@ -12,4 +12,9 @@ Monitors the state of licenses in FlexLM, eg how many of what license are in use
 ## Openstack
 Best if run on the controller itself, however can work anywhere so long as the backing MariaDB instance can be reached via the connection/authentication information in: /etc/telegraf/mysql_creds
 
-Monitors resource allocations across the openstack cluster, broken down by hypervisor.  Tracks vCPU, Memory, Volumes, Floating IPs, Instances, and Security Groups in use across the system.  Also tracks the number of instances on a per flavor basis, as well as project quota information.   
+Monitors resource allocations across the openstack cluster, broken down by hypervisor.  Tracks vCPU, Memory, Volumes, Floating IPs, Instances, and Security Groups in use across the system.  Also tracks the number of instances on a per flavor basis, as well as project quota information.  
+
+## Rstudio Pro
+Configure with Rstudio Pro Health URL.  
+
+This check pulls down and ingests data from the Rstudio Pro health endpoint for storing in InfluxDB; this is useful for tracking Rstudio license activation and other health status information. 
