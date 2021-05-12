@@ -27,4 +27,7 @@ Have this check run on all K8s hosts in a cluster; it needs:
 This check monitors the health of core K8s services that support the health of K8s itself.  This includes the CNI in use, kube-apiserver, kube-proxy, kube-scheduler, kube-controller-manager, and coredns.  Additional services can be added if desired however one needs to remain aware of cardinality.  Monitoring the health of services *managed by/run "on top of" K8s* are best monitored via other means.  This check is meant to provide insight into the health of the core functions of a bare metal K8s deployment. 
 
 ## HTCondor Stats
-This check runs on the condor scheduler and grabs information about host utilization, job counts, and job counts by user.  
+This check runs on the condor scheduler and grabs information about host utilization, job counts, and job counts by user. 
+
+## Tape Drive Stats
+This check ingests stats for tape drives from /sys/class/scsi_tape/st*/stats and injects them into InfluxDB
