@@ -2,23 +2,20 @@
 
 ## Built to monitor basic stats on FC connected tape drives
 
-## Get list of tape drives
-drives=($(ls /sys/class/scsi_tape | grep ^st | rev | grep ^[0-9] | rev))
+drives=($(ls /sys/class/fc_host))
 
-## For each drive get stats
 for d in ${drives[@]}
 do
+	if [ "$(cat /sys/class/fc_host/${d}/speed)" != "unknown" ]; then
 	line="tape_stats,drive_device=${d} "
-	counters=($(ls /sys/class/scsi_tape/${d}/stats/))
-
-	## For each counter get stats
+	counters=(rx_words tx_words)
 	for c in ${counters[@]}
 	do
-		value=$(cat /sys/class/scsi_tape/${d}/stats/${c})
+		hex_value=$(cat /sys/class/fc_host/${d}/statistics/${c})
+		value=$(printf "%d\n" ${hex_value})
 		line=${line},${c}=${value}
 	done
-
-	## Strip out extra leading comma
-	line=$(echo ${line} | sed 's/\ ,/\ /')
+	line=$(echo $line | sed 's/\ ,/\ /')
 	echo ${line}
+	fi
 done
