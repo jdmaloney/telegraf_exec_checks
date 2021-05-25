@@ -17,15 +17,6 @@ do
 	echo "condor_user_stats,user=${u} total_jobs=${tot_jobs},completed_jobs=${tot_completed},removed_jobs=${tot_removed},running_jobs=${tot_running},held_jobs=${tot_held},suspended_jobs=${tot_suspended}"
 done
 
-## User Historical Data
-#condor_userprio -usage -allusers > "${tfile}"
-#users=($(grep @ ${tfile} | cut -d'@' -f 1 | xargs))
-
-#for u in "${users[@]}"
-#do
-#	grep "${u}"@ "${tfile}"
-#done
-
 ## Machine Status
 condor_status > "${tfile}"
 
@@ -37,5 +28,11 @@ IFS=" " read nodes_total nodes_owner nodes_claimed nodes_unclaimed nodes_matched
 
 echo "condor_host_stats nodes_total=${nodes_total},nodes_owner=${nodes_owner},nodes_cliamed=${nodes_claimed},nodes_unclaimed=${nodes_unclaimed},nodes_match=${nodes_matched},nodes_preempting=${nodes_preempting},nodes_drain=${nodes_drain}"
 
+## Core & Memory Usage
+condor_q -l > "${tfile}"
+cores_used=$(grep "RequestCpus = " ${tfile} | cut -d' ' -f 3 | paste -sd+ | bc)
+memory_used_mb=$(grep "RequestMemory = " ${tfile} | cut -d' ' -f 3 | paste -sd+ | bc)
+echo "condor_agg_stats,type=cores used=${cores_used}"
+echo "condor_agg_stats,type=memory used=${memory_used_mb}"
 
 rm -rf "${tfile}"
