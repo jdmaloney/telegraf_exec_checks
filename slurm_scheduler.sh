@@ -30,6 +30,17 @@ echo "slurm_jobsumdata,partition=all,type=running count=${running_jobs}"
 echo "slurm_jobsumdata,partition=all,type=pending count=${pending_jobs}"
 echo "slurm_jobsumdata,partition=all,type=total count=${total_jobs}"
 
+pend_line="slurm_jobsumdata,partition=all,type=pendingbyreason "
+found_pending=0
+while IFS= read -r line; do
+        found_pending=1
+        IFS=" " read -r pend_job_count pend_reason <<< "${line}"
+        pend_line="${pend_line},${pend_reason}=${pend_job_count}"
+done < <(awk '{print $9}' ${tf} | awk '$1 ~ /\(/ {print $0}' | sort | uniq -c | sed 's/^ *//g' | tr -d '()')
+if [ ${found_pending} -eq 1 ]; then
+        final_pend_line=$(echo ${pend_line} | sed 's/\ ,/\ /')
+        echo "${final_pend_line}"
+fi
 
 for p in ${partitions[@]}
 do
@@ -40,6 +51,18 @@ do
 	echo "slurm_jobsumdata,partition=$p,type=running count=${running_jobs}"
 	echo "slurm_jobsumdata,partition=$p,type=pending count=${pending_jobs}"
 	echo "slurm_jobsumdata,partition=$p,type=total count=${total_jobs}"
+
+	pend_line="slurm_jobsumdata,partition=${p},type=pendingbyreason "
+        found_pending=0
+        while IFS= read -r line; do
+                found_pending=1
+                IFS=" " read -r pend_job_count pend_reason <<< "${line}"
+                pend_line="${pend_line},${pend_reason}=${pend_job_count}"
+        done < <(awk -v partition=${p} '$2 == partition {print $9}' ${tf} | awk '$1 ~ /\(/ {print $0}' | sort | uniq -c | sed 's/^ *//g' | tr -d '()')
+        if [ ${found_pending} -eq 1 ]; then
+                final_pend_line=$(echo ${pend_line} | sed 's/\ ,/\ /')
+                echo "${final_pend_line}"
+        fi
 
 	IFS="/" read alloc_nodes idle_nodes offline_nodes total_nodes <<< "$("${slurm_path}"/sinfo -h --partition="$p" -o %F)"
 
