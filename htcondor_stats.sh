@@ -21,7 +21,8 @@ done
 condor_status > "${tfile}"
 
 read -r machines owner claimed unclaimed matched preempting drain <<< "$(tail -n 1 ${tfile} | awk '{print $2" "$3" "$4" "$5" "$6" "$7" "$8}')"
-echo "condor_agg_stats,type=nodes machines=${machines},owner=${owner},claimed=${claimed},unclaimed=${unclaimed},matched=${matched},preempting=${preempting},drain=${drain}"
+hosts_busy=$(grep "@" ${tfile} | grep Claimed | awk '{print $1}' | cut -d'@' -f 2 | sort -u | wc -l)
+echo "condor_agg_stats,type=nodes machines=${machines},owner=${owner},claimed=${claimed},unclaimed=${unclaimed},matched=${matched},preempting=${preempting},drain=${drain},hosts_busy=${hosts_busy}"
 
 ## High Level Node Stats
 IFS=" " read nodes_total nodes_owner nodes_claimed nodes_unclaimed nodes_matched nodes_preempting nodes_drain <<< "$(condor_status -total | tail -n 1 | awk '{print $2,$3,$4,$5,$6,$7,$8}')"
