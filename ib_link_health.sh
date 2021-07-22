@@ -23,7 +23,7 @@ do
 		else
 			link_code=0
 		fi
-		echo "ib_health,device=${d},port=port_${p} state=${state},active_code=${active_code},phys_state=${link},link_code=${link_code},rate=${rate}"
+		echo "ib_health,device=${d},port=port_${p} state=\"${state}\",active_code=${active_code},phys_state=\"${link}\",link_code=${link_code},rate=${rate}"
 	done
 done
 
