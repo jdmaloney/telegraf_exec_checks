@@ -36,7 +36,7 @@ while IFS= read -r line; do
         found_pending=1
         IFS=" " read -r pend_job_count pend_reason <<< "${line}"
         pend_line="${pend_line},${pend_reason}=${pend_job_count}"
-done < <(awk '{print $9}' ${tf} | awk '$1 ~ /\(/ {print $0}' | sort | uniq -c | sed 's/^ *//g' | tr -d '()')
+done < <(awk '{print $9}' ${tf} | awk '$1 ~ /\(/ {print $0}' | sort | uniq -c | sed 's/^ *//g' | tr -d '()' | sed 's/,//g')
 if [ ${found_pending} -eq 1 ]; then
         final_pend_line=$(echo ${pend_line} | sed 's/\ ,/\ /')
         echo "${final_pend_line}"
@@ -58,7 +58,7 @@ do
                 found_pending=1
                 IFS=" " read -r pend_job_count pend_reason <<< "${line}"
                 pend_line="${pend_line},${pend_reason}=${pend_job_count}"
-        done < <(awk -v partition=${p} '$2 == partition {print $9}' ${tf} | awk '$1 ~ /\(/ {print $0}' | sort | uniq -c | sed 's/^ *//g' | tr -d '()')
+        done < <(awk -v partition=${p} '$2 == partition {print $9}' ${tf} | awk '$1 ~ /\(/ {print $0}' | sort | uniq -c | sed 's/^ *//g' | tr -d '()' | sed 's/,//g')
         if [ ${found_pending} -eq 1 ]; then
                 final_pend_line=$(echo ${pend_line} | sed 's/\ ,/\ /')
                 echo "${final_pend_line}"
