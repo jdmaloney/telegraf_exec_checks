@@ -2,6 +2,7 @@
 
 tfile=$(mktemp /tmp/ib.XXXXXX)
 
+## Verify IB port link speeds
 devices=($(ibstat -l | xargs))
 
 for d in ${devices[@]}
