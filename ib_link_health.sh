@@ -7,13 +7,14 @@ devices=($(ibstat -l | xargs))
 
 for d in ${devices[@]}
 do
-	ibstat ${d} | grep -B3 "Rate:" | grep -v "\-\-" > "${tfile}"
-	ports=($(grep Port "${tfile}" | cut -d':' -f 1 | cut -d' ' -f 2))
+	ibstat ${d} | grep -B3 -A6 "Rate:" | grep -v "\-\-" > "${tfile}"
+	ports=($(grep "Port\ [0-9]" "${tfile}" | cut -d':' -f 1 | cut -d' ' -f 2))
 	for p in ${ports[@]}
 	do
 		state=$(grep -A3 "Port ${p}" "${tfile}" | grep "State:" | cut -d' ' -f 2)
 		link=$(grep -A3 "Port ${p}" "${tfile}" | grep "Physical" | cut -d' ' -f 3)
 		rate=$(grep -A3 "Port ${p}" "${tfile}" | grep "Rate:" | cut -d' ' -f 2)
+		conn_type=$(grep -A9 "Port ${p}" "${tfile}" | grep "Link layer:" | cut -d' ' -f 3)
 		if [ "${state}" == "Active" ]; then
 			active_code=1
 		else
@@ -24,7 +25,7 @@ do
 		else
 			link_code=0
 		fi
-		echo "ib_health,device=${d},port=port_${p} state=\"${state}\",active_code=${active_code},phys_state=\"${link}\",link_code=${link_code},rate=${rate}"
+		echo "ib_health,device=${d},port=port_${p} state=\"${state}\",active_code=${active_code},phys_state=\"${link}\",link_code=${link_code},rate=${rate},conn_type=\"${conn_type}\""
 	done
 done
 
