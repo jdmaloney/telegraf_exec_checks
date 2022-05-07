@@ -27,5 +27,5 @@ These checks run on the condor scheduler and grabs information about host utiliz
 ## Tape Drive Stats
 This check ingests read/write stats for tape drives from /sys/class/fc_host/hostXX/statistics and injects them into InfluxDB
 
-## IB Health
-Checks state of IB interfaces, and grabs their link rates so one can track to make sure all interfaces link properly
+## Mellanox NIC Health
+Checks state of Infiniband, Slingshot 10, and Ethernet interfaces that leverage Mellanox cards, and grabs their link rates so one can track to make sure all interfaces link properly, have proper PCIe link/lane speed, etc..
