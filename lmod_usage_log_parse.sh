@@ -1,5 +1,6 @@
 #!/bin/bash
 
+## NOTE: Telegraf user needs either permissions or ability to sudo to acces module usage file
 tfile=$(mktemp /tmp/lmp.XXXXXXX)
 log_path=""
 
