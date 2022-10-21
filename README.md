@@ -32,3 +32,6 @@ Checks state of Infiniband, Slingshot 10, and Ethernet interfaces that leverage 
 
 ## LMoD Stats
 This parses a centralized LMoD log on a once-per-minute cadence.  It ingests module load events on a per-user, per-module-path basis and prints the data in a format that Telegraf can parse/ingest to InfluxDB
+
+## Head Node Resource Check
+Gahters cpu % usage, memory % usage, memory KB usage, and number of processes for each user on a given machine.  In the HPC context this was developed we run this only on login nodes.
