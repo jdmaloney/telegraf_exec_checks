@@ -2,10 +2,10 @@
 
 tfile=$(mktemp /tmp/user_resource.XXXXXXXXX)
 users=($(ps axo user:20 | sort -u | grep -v USER))
+ps axo user:20,pid,pcpu,pmem > "${tfile}"
 
 for u in ${users[@]}
 do
-	ps axo user:20,pid,pcpu,pmem > "${tfile}"
 	cpu_percent=$(egrep ^${u} ${tfile} | awk '{print $3}' | paste -s -d+ - | bc)
 	mem_percent=$(egrep ^${u} ${tfile} | awk '{print $4}' | paste -s -d+ - | bc)
 	mem_kb=$(ps -U ${u} --no-headers -o rss | awk '{ sum+=$1} END {print int(sum)}')
