@@ -2,7 +2,7 @@
 
 tfile=$(mktemp /tmp/user_resource.XXXXXXXXX)
 users=($(ps axo user:20 | sort -u | grep -v USER))
-ps axo user:20,pid,pcpu,pmem > "${tfile}"
+ps axo user:20,pid,pcpu,pmem,rss > "${tfile}"
 
 for u in ${users[@]}
 do
