@@ -7,7 +7,7 @@ log_path=""
 ## Last Minute
 ## Get any log lines from past 60 seconds and chunk it to only what we need
 date_filter=$(date +"%b %d %H:%M:" -d -1minute)
-cat ${log_path} | grep "${date_filter}" | cut -d'=' -f 2,4,6 | sed -e 's/module=//g' -e 's/host=//g' > "${tfile}"
+grep "${date_filter}" "${log_path}" | cut -d'=' -f 2,4,6 | sed -e 's/module=//g' -e 's/host=//g' > "${tfile}"
 
 ## Parse lines
 while read -r line; do
